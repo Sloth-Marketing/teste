@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Jogo da Velha</title>
+  <style>
+    .board {
+      display: flex;
+      flex-wrap: wrap;
+      width: 400px;
+    }
+    
+    .board div {
+      width: 100px;
+      height: 100px;
+      line-height: 100px;
+      text-align: center;
+      font-size: 48px;
+      font-weight: bold;
+      border: 1px solid black;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <h1>Jogo da Velha</h1>
+  <div class="board"></div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  <script>
+    // Criação do tabuleiro do jogo
+    const board = document.querySelector('.board');
+    const cells = [];
+
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement('div');
+      cell.addEventListener('click', () => makeMove(i));
+      board.appendChild(cell);
+      cells.push(cell);
+    }
+
+    // Jogador atual (X ou O)
+    let currentPlayer = 'X';
+
+    // Função para realizar uma jogada
+    function makeMove(index) {
+      if (cells[index].textContent === '') {
+        cells[index].textContent = currentPlayer;
+        cells[index].style.cursor = 'default';
+
+        // Verifica se alguém venceu
+        if (checkWinner(currentPlayer)) {
+          alert(`Jogador ${currentPlayer} venceu!`);
+          resetGame();
+          return;
+        }
+
+        // Verifica se ocorreu empate
+        if (checkTie()) {
+          alert('O jogo empatou!');
+          resetGame();
+          return;
+        }
+
+        // Alterna o jogador atual
+        currentPlayer = currentPlayer === 'X' ? 'O' : 'X';
+      }
+    }
+
+    // Função para verificar se alguém venceu
+    function checkWinner(player) {
+      const winningCombinations = [
+        [0, 1, 2], [3, 4, 5], [6, 7, 8], // linhas horizontais
+        [0, 3, 6], [1, 4, 7], [2, 5, 8], // linhas verticais
+        [0, 4, 8], [2, 4, 6] // diagonais
+      ];
+
+      return winningCombinations.some(combination => {
+        return combination.every(index => cells[index].textContent === player);
+      });
+    }
+
+    // Função para verificar se ocorreu empate
+    function checkTie() {
+      return [...cells].every(cell => cell.textContent !== '');
+    }
+
+    // Função para reiniciar o jogo
+    function resetGame() {
+      cells.forEach(cell => {
+        cell.textContent = '';
+        cell.style.cursor = 'pointer';
+      });
+
+      currentPlayer = 'X';
+    }
+  </script>
+</body>
+</html>
